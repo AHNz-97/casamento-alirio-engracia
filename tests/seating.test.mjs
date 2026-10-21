@@ -1,0 +1,73 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { DatabaseSync } from 'node:sqlite';
+import { categories } from '../shared/inharrime.js';
+import { planSeats,tablePrefixes,tableNumber,categoryPath } from '../shared/seating.js';
+import { login,logout,hashText,requireAdmin,requireStaff } from '../functions/api/admin/_access.js';
+import { onRequestPost,onRequestGet,onRequestPut,onRequestAllocate } from '../functions/api/admin/inharrime.js';
+import { protocol } from '../functions/api/protocol.js';
+import { submitCategoryMessage,listMessages,moderateMessage,servePhoto } from '../functions/api/guest-messages.js';
+import { categoryPage } from '../lib/category-page.js';
+import { handleBadges } from '../functions/api/admin/badges.js';
+
+function setup(){const db=new DatabaseSync(':memory:');db.exec('PRAGMA foreign_keys=ON');const DB={prepare(sql){let values=[];return{bind(...v){values=v;return this;},async first(){return db.prepare(sql).get(...values)??null;},async all(){return{results:db.prepare(sql).all(...values)};},async run(){return{meta:db.prepare(sql).run(...values)};}};},async batch(statements){db.exec('BEGIN');try{const results=[];for(const s of statements)results.push(await s.run());db.exec('COMMIT');return results;}catch(e){db.exec('ROLLBACK');throw e;}}};return {DB,db};}
+const request=(path,body,method='POST',cookie='',extra={})=>new Request('https://example.com'+path,{method,headers:{'Content-Type':'application/json',Cookie:cookie,...extra},body:body===undefined?undefined:JSON.stringify(body)});
+
+test('25 tables, 250 distinct seats, category sharing and capacity',()=>{
+  assert.equal(categories.length,11);assert.equal(categories[2],'Irmãos');assert.equal(categories[10],'Convidados dos padrinhos');
+  assert.equal(tablePrefixes.length,25);assert.equal(tableNumber('0A'),1);assert.equal(tableNumber('4E'),25);
+  const plan=planSeats([],[],[{id:'a',category:categories[0],guest_count:200},{id:'b',category:categories[0],guest_count:50}]);
+  assert.equal(plan.seats[0].code,'0A00');assert.equal(plan.seats.at(-1).code,'4E09');assert.equal(new Set(plan.seats.map(s=>s.code)).size,250);
+  assert.throws(()=>planSeats(plan.tables,plan.seats,[{id:'c',category:categories[1],guest_count:1}]));
+  const a=planSeats([],[],[{id:'a',category:categories[0],guest_count:2},{id:'b',category:categories[3],guest_count:1},{id:'c',category:categories[0],guest_count:1}]);
+  assert.deepEqual(a.seats.map(s=>s.code),['0A00','0A01','0B00','0A02']);
+  assert.equal(categoryPath(categories[2]),'/mensagem/categoria/3');
+});
+
+test('protocol is restricted, arrivals are partial, timestamped and concurrency-safe; category messages are private',async()=>{
+  const {DB,db}=setup(),files=new Map();const env={DB,ADMIN_ALIRIO_PASSWORD_SHA256:await hashText('admin-test'),PROTOCOL_PASSWORD_SHA256:await hashText('protocolo'),PDFS:{async put(k,v){files.set(k,v);},async get(k){return files.has(k)?{body:files.get(k)}:null;},async delete(k){files.delete(k);}}};
+  const adminLogin=await login(request('/api/login',{username:'alirio',password:'admin-test'}),env),staffLogin=await login(request('/api/login',{username:'protocolo',password:'protocolo'}),env);
+  assert.equal(staffLogin.status,200);assert.equal((await staffLogin.clone().json()).redirect,'/protocolo');
+  const admin=adminLogin.headers.get('Set-Cookie').split(';')[0],staff=staffLogin.headers.get('Set-Cookie').split(';')[0];
+  assert.equal((await requireStaff(request('/protocolo',undefined,'GET',staff),env)).role,'protocol');
+  assert.equal((await requireAdmin(request('/admin',undefined,'GET',staff),env)).ok,false);
+  assert.equal((await onRequestGet({request:request('/api/admin/inharrime',undefined,'GET',staff),env})).status,401);
+  assert.equal((await handleBadges(request('/api/admin/badges',undefined,'GET',staff),env)).status,401);
+  assert.equal((await listMessages(request('/api/messages',undefined,'GET',staff),env)).status,401);
+  const create=await onRequestPost({request:request('/api/admin/inharrime',{requestId:crypto.randomUUID(),invitations:[{nome:'Família Nhamize',pessoas:3,categoria:1,contacto:'private-phone'},{nome:'Grupo de amigos',pessoas:2,categoria:4}]},'POST',admin),env});assert.equal(create.status,201);
+  const getAdmin=async()=>await (await onRequestGet({request:request('/api/admin/inharrime',undefined,'GET',admin),env})).json();
+  let list=await getAdmin();const first=list.invitations[0];assert.equal(first.table_name,'0A');assert.deepEqual(first.seats.map(s=>s.code),['0A00','0A01','0A02']);assert.equal(list.invitations[1].seats[0].code,'0B00');
+  const getProtocol=async()=>await (await protocol(request('/api/protocol',undefined,'GET',staff),env)).json();
+  assert.ok(!JSON.stringify(await getProtocol()).includes('private-phone'));
+  const body={code:'0A00',invitationId:first.id,version:0,action:'present',requestId:crypto.randomUUID()};
+  const arrival=await protocol(request('/api/protocol',body,'POST',staff),env);assert.equal(arrival.status,200);const {arrivedAt}=await arrival.json();assert.ok(Number.isFinite(Date.parse(arrivedAt)));
+  assert.equal((await protocol(request('/api/protocol',body,'POST',staff),env)).status,200,'retry does not duplicate or change time');
+  assert.equal((await protocol(request('/api/protocol',{...body,action:'absent',requestId:crypto.randomUUID()},'POST',staff),env)).status,409,'stale device cannot overwrite');
+  let guest=(await getProtocol()).guests.find(g=>g.id===first.id);assert.equal(guest.seats.filter(s=>s.arrivedAt).length,1);assert.equal(guest.seats[0].arrivedAt,arrivedAt);
+  assert.equal((await protocol(request('/api/protocol',{...body,version:1,requestId:crypto.randomUUID()},'POST',staff),env)).status,200,'already present retains original time');
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM seating_events').get().n,1);
+  const edit={id:first.id,revision:first.revision,recipientName:first.recipient_name,guestCount:4,category:categories[0],contactPhone:first.contact_phone};
+  assert.equal((await onRequestPut({request:request('/api/admin/inharrime',edit,'PUT',admin),env})).status,409,'do not move a seated guest');
+  assert.equal((await protocol(request('/api/protocol',{...body,version:1,action:'absent',requestId:crypto.randomUUID()},'POST',staff),env)).status,200);
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM seating_events').get().n,2);
+  assert.equal((await onRequestPut({request:request('/api/admin/inharrime',edit,'PUT',admin),env})).status,200);
+  assert.equal((await onRequestPut({request:request('/api/admin/inharrime',edit,'PUT',admin),env})).status,409,'optimistic update');
+  assert.equal((await protocol(request('/api/protocol',{...body,requestId:crypto.randomUUID()},'POST',staff,{'Origin':'https://other.test'}),env)).status,403);
+  const page=await (await categoryPage(new Request('https://example.com/mensagem/categoria/1'),env,1)).text();assert.ok(page.includes('Mesa da fam\u00edlia'));assert.ok(!page.includes('<select'));assert.ok(!page.includes('0A'));assert.ok(page.includes('photo-upload-note'));assert.ok(!page.includes('Família Nhamize'));assert.ok(!page.includes('Ver mensagens'));assert.ok(page.includes('O seu nome (opcional)'));
+  const form=(table='0A',name='',photo=false,id=crypto.randomUUID())=>{const data=new FormData();data.set('tableCode',table);data.set('name',name);data.set('message','Felicidades!');data.set('requestId',id);if(photo)data.set('photo',new Blob([Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl6V9cAAAAASUVORK5CYII=','base64')],{type:'image/png'}),'photo.png');return new Request('https://example.com/api/category-messages/1',{method:'POST',body:data});};
+  assert.equal((await submitCategoryMessage(form('0B'),env,1)).status,400,'table must belong to category');
+  const messageRequest=crypto.randomUUID();assert.equal((await submitCategoryMessage(form('','',false,messageRequest),env,1)).status,201);assert.equal((await submitCategoryMessage(form('0A','',false,messageRequest),env,1)).status,200);
+  let moderation=await (await listMessages(request('/api/admin/guest-messages',undefined,'GET',admin),env,true)).json();assert.equal(moderation.messages.length,1);const message=moderation.messages[0];assert.equal(message.name,'Mesa da fam\u00edlia');assert.equal(message.photo_url,null);assert.equal(message.table_label,'Mesa da fam\u00edlia');assert.ok(!('table_code' in message));assert.equal(message.source,'category');
+  assert.equal((await listMessages(request('/api/messages',undefined,'GET'),env)).status,401);
+  assert.equal((await (await listMessages(request('/api/messages',undefined,'GET',admin),env)).json()).messages.length,0);
+  assert.equal((await moderateMessage(request('/api/admin/guest-messages',{id:message.id,source:'category',status:'approved',currentStatus:'pending'},'PUT',staff),env)).status,401);
+  assert.equal((await moderateMessage(request('/api/admin/guest-messages',{id:message.id,source:'category',status:'approved',currentStatus:'pending'},'PUT',admin),env)).status,200);
+  assert.equal((await (await listMessages(request('/api/messages',undefined,'GET',admin),env)).json()).messages.length,1);
+  assert.equal((await submitCategoryMessage(form('0A','Maria',true),env,1)).status,201);
+  moderation=await (await listMessages(request('/api/admin/guest-messages',undefined,'GET',admin),env,true)).json();const withPhoto=moderation.messages.find(r=>r.name==='Maria');assert.ok(withPhoto.photo_url);
+  assert.equal((await servePhoto(request(withPhoto.photo_url,undefined,'GET',staff),env,withPhoto.id)).status,404);
+  assert.equal((await servePhoto(request(withPhoto.photo_url,undefined,'GET',admin),env,withPhoto.id)).status,200);
+  assert.equal((await onRequestAllocate({request:request('/api/admin/inharrime/allocate',{},'POST',staff),env})).status,401);
+  assert.equal((await onRequestAllocate({request:request('/api/admin/inharrime/allocate',{},'POST',admin),env})).status,200);
+  assert.equal((await logout(request('/api/logout',{},'POST',staff),env)).status,200);assert.equal((await requireStaff(request('/protocolo',undefined,'GET',staff),env)).ok,false);
+});

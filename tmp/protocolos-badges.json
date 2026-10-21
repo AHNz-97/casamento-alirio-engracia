@@ -1,0 +1,18 @@
+[
+  {"name":"João Gito Ndzevo","role":"Protocolo","photo":"joao-gito-ndzevo.jpg","frame":0},
+  {"name":"Samuel Vasco Zitha Júnior","role":"Protocolo","photo":"samuel-vasco-zitha-junior.jpg","frame":10},
+  {"name":"Esperança Adriano Dacalo","role":"Protocolo","photo":"esperanca-adriano-dacalo.jpg","frame":15},
+  {"name":"Silvia Shirley Mucavele","role":"Protocolo","photo":"silvia-shirley-mucavele.jpg","frame":20},
+  {"name":"Vanda Cristina Samuel Zitha","role":"Protocolo","photo":"vanda-cristina-samuel-zitha.jpg","frame":25},
+  {"name":"Olima Jaime","role":"Protocolo","photo":"olima-jaime.jpg","frame":30},
+  {"name":"David Mahanjane","role":"Protocolo","photo":null,"frame":0,"note":"Photo cut off at start of video; fallback symbol until a complete photo is supplied."},
+  {"name":"Nilza Sibinde","role":"Protocolo","photo":"nilza-sibinde.jpg","frame":6},
+  {"name":"Nelson Estevão Témbe","role":"Protocolo","photo":"nelson-estevao-tembe.jpg","frame":12},
+  {"name":"Marlucha Monjane","role":"Protocolo","photo":"marlucha-monjane.jpg","frame":17},
+  {"name":"Argelância da Tela Samuel Zitha","role":"Protocolo","photo":"argelancia-da-tela-samuel-zitha.jpg","frame":22},
+  {"name":"Kelven-Zé Lino Cossa","role":"Protocolo","photo":"kelven-ze-lino-cossa.jpg","frame":27},
+  {"name":"Ènia Joana","role":"Protocolo","photo":"enia-joana.jpg","frame":28},
+  {"name":"Filomena Zita","role":"Protocolo","photo":"filomena-zita.jpg","frame":32},
+  {"name":"Yurnica Cossa","role":"Protocolo","photo":"yurnica-cossa.jpg","frame":35},
+  {"name":"Ana Paula Rogério","role":"Protocolo","photo":"ana-paula-rogerio.jpg","frame":38,"note":"Name immediately precedes the final photo; Yurnica caption immediately follows the preceding photo."}
+]

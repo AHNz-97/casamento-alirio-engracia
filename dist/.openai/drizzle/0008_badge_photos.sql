@@ -1,0 +1,2 @@
+CREATE TABLE IF NOT EXISTS badge_photos (badge_id TEXT PRIMARY KEY REFERENCES badges(id) ON DELETE CASCADE, photo_key TEXT NOT NULL, photo_type TEXT NOT NULL, created_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS badge_write_guard (valid INTEGER PRIMARY KEY CHECK(valid = 1));

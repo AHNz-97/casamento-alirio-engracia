@@ -1,0 +1,227 @@
+{
+  "folder": "C:/Users/anham/Desktop/Screepts/Convites Inharrime - Colegas da escola - 2026-09-30",
+  "requestId": "b283d985-cc46-4ad5-b492-b3ef32672a69",
+  "updated": [
+    {
+      "id": "eacf7b53-041f-4291-bfda-a7a85df87af0",
+      "name": "Marcos Mazive",
+      "previousCategory": "Amigos",
+      "previousContact": "878244708"
+    }
+  ],
+  "payload": [
+    {
+      "recipientName": "Valério de Melo",
+      "guestCount": 1,
+      "category": "Colegas da escola / formadores do ensino técnico",
+      "contactPhone": "842575261"
+    },
+    {
+      "recipientName": "Carlos Gove",
+      "guestCount": 1,
+      "category": "Colegas da escola / formadores do ensino técnico",
+      "contactPhone": "842575261"
+    },
+    {
+      "recipientName": "António Gove",
+      "guestCount": 1,
+      "category": "Colegas da escola / formadores do ensino técnico",
+      "contactPhone": "842575261"
+    },
+    {
+      "recipientName": "Edilson Soustino",
+      "guestCount": 2,
+      "category": "Colegas da escola / formadores do ensino técnico",
+      "contactPhone": "842575261"
+    },
+    {
+      "recipientName": "Anselmo Marengula",
+      "guestCount": 2,
+      "category": "Colegas da escola / formadores do ensino técnico",
+      "contactPhone": "842575261"
+    },
+    {
+      "recipientName": "Edson Arcanjo",
+      "guestCount": 2,
+      "category": "Colegas da escola / formadores do ensino técnico",
+      "contactPhone": "842575261"
+    },
+    {
+      "recipientName": "Dulce Pedro",
+      "guestCount": 1,
+      "category": "Colegas da escola / formadores do ensino técnico",
+      "contactPhone": "842575261"
+    },
+    {
+      "recipientName": "Geraldo Nhabomba",
+      "guestCount": 1,
+      "category": "Colegas da escola / formadores do ensino técnico",
+      "contactPhone": "842575261"
+    },
+    {
+      "recipientName": "Gina Pacule",
+      "guestCount": 1,
+      "category": "Colegas da escola / formadores do ensino técnico",
+      "contactPhone": "842575261"
+    },
+    {
+      "recipientName": "Afilaida Santana",
+      "guestCount": 1,
+      "category": "Colegas da escola / formadores do ensino técnico",
+      "contactPhone": "842575261"
+    },
+    {
+      "recipientName": "Fernando Mucota",
+      "guestCount": 1,
+      "category": "Colegas da escola / formadores do ensino técnico",
+      "contactPhone": "842575261"
+    },
+    {
+      "recipientName": "Valdemiro Chambule",
+      "guestCount": 1,
+      "category": "Colegas da escola / formadores do ensino técnico",
+      "contactPhone": "842575261"
+    },
+    {
+      "recipientName": "Agnécio Guambe",
+      "guestCount": 1,
+      "category": "Colegas da escola / formadores do ensino técnico",
+      "contactPhone": "842575261"
+    },
+    {
+      "recipientName": "Adamo Abdula",
+      "guestCount": 1,
+      "category": "Colegas da escola / formadores do ensino técnico",
+      "contactPhone": "842575261"
+    },
+    {
+      "recipientName": "Daniel Chandabia",
+      "guestCount": 1,
+      "category": "Colegas da escola / formadores do ensino técnico",
+      "contactPhone": "842575261"
+    },
+    {
+      "recipientName": "Daniel Mussane",
+      "guestCount": 1,
+      "category": "Colegas da escola / formadores do ensino técnico",
+      "contactPhone": "842575261"
+    },
+    {
+      "recipientName": "Anselmo Guiumba",
+      "guestCount": 1,
+      "category": "Colegas da escola / formadores do ensino técnico",
+      "contactPhone": "842575261"
+    }
+  ],
+  "files": [
+    {
+      "file": "01 - Valério de Melo.pdf",
+      "name": "Valério de Melo",
+      "people": 1,
+      "id": "f6dde853-8537-411d-b046-0fc50aae925e"
+    },
+    {
+      "file": "02 - Carlos Gove.pdf",
+      "name": "Carlos Gove",
+      "people": 1,
+      "id": "87a9458a-defd-413c-971b-eca8080d83fa"
+    },
+    {
+      "file": "03 - António Gove.pdf",
+      "name": "António Gove",
+      "people": 1,
+      "id": "1fb5807a-c90b-4491-a56e-ae73b4decfb7"
+    },
+    {
+      "file": "04 - Edilson Soustino.pdf",
+      "name": "Edilson Soustino",
+      "people": 2,
+      "id": "77f03e39-074a-4b0b-905b-652937c8a207"
+    },
+    {
+      "file": "05 - Anselmo Marengula.pdf",
+      "name": "Anselmo Marengula",
+      "people": 2,
+      "id": "527e96d3-99bf-433e-be9f-5f3ac1a254a3"
+    },
+    {
+      "file": "06 - Edson Arcanjo.pdf",
+      "name": "Edson Arcanjo",
+      "people": 2,
+      "id": "d97a2f84-6d47-4591-be67-d7d44384c3b6"
+    },
+    {
+      "file": "07 - Dulce Pedro.pdf",
+      "name": "Dulce Pedro",
+      "people": 1,
+      "id": "9c8b60f4-563a-4923-b7e8-5eca24150bc8"
+    },
+    {
+      "file": "08 - Geraldo Nhabomba.pdf",
+      "name": "Geraldo Nhabomba",
+      "people": 1,
+      "id": "48fe7b6b-acb5-454b-92a8-c24d55500ccd"
+    },
+    {
+      "file": "09 - Gina Pacule.pdf",
+      "name": "Gina Pacule",
+      "people": 1,
+      "id": "cc6b5dd6-2e67-40c1-975c-c629029da912"
+    },
+    {
+      "file": "10 - Afilaida Santana.pdf",
+      "name": "Afilaida Santana",
+      "people": 1,
+      "id": "cf9bdb93-ec95-4ef8-9a31-14caf4d56270"
+    },
+    {
+      "file": "11 - Fernando Mucota.pdf",
+      "name": "Fernando Mucota",
+      "people": 1,
+      "id": "e10f88d0-2e7b-4855-9d11-a3e911e9dcb0"
+    },
+    {
+      "file": "12 - Valdemiro Chambule.pdf",
+      "name": "Valdemiro Chambule",
+      "people": 1,
+      "id": "e39653c9-d424-4a97-8aed-fc89e19bca83"
+    },
+    {
+      "file": "13 - Agnécio Guambe.pdf",
+      "name": "Agnécio Guambe",
+      "people": 1,
+      "id": "d4bdcd4a-213e-4569-82b1-bb39f2e53918"
+    },
+    {
+      "file": "14 - Adamo Abdula.pdf",
+      "name": "Adamo Abdula",
+      "people": 1,
+      "id": "339118cd-b9ec-41ec-a38e-c9eb973c10d1"
+    },
+    {
+      "file": "15 - Marcos Mazive.pdf",
+      "name": "Marcos Mazive",
+      "people": 1,
+      "id": "eacf7b53-041f-4291-bfda-a7a85df87af0"
+    },
+    {
+      "file": "16 - Daniel Chandabia.pdf",
+      "name": "Daniel Chandabia",
+      "people": 1,
+      "id": "5da52a9a-ef82-4a37-9cad-19e217d64e18"
+    },
+    {
+      "file": "17 - Daniel Mussane.pdf",
+      "name": "Daniel Mussane",
+      "people": 1,
+      "id": "1cfce068-ebbb-4557-aa7c-63f86169cb06"
+    },
+    {
+      "file": "18 - Anselmo Guiumba.pdf",
+      "name": "Anselmo Guiumba",
+      "people": 1,
+      "id": "54a0675b-8f74-498f-a722-5f0958387bf7"
+    }
+  ],
+  "completedAt": "2026-09-30T05:18:15.663Z"
+}

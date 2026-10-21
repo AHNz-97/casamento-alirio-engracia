@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="pt-MZ">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#173c2b" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Convites de Xai-Xai — Alírio &amp; Engrácia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:wght@500;600&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/admin.css" />
+    <script src="/pdf-generator.js" defer></script>
+    <script src="/xai-xai-admin.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#admin-content">Saltar para o conteúdo</a>
+
+    <header class="admin-header">
+      <div class="admin-brand" aria-label="Alírio e Engrácia">
+        <span>A</span><i>&amp;</i><span>E</span>
+      </div>
+      <div class="header-copy">
+        <p>3 de outubro de 2026</p>
+        <strong>Convites de Xai-Xai</strong>
+      </div>
+      <nav class="admin-actions"><a class="public-link" href="/xai-xai">Ver convite</a><a class="public-link" href="/admin/crachas">Crachás</a><button id="logout" class="text-button" type="button">Sair</button></nav>
+    </header>
+
+    <main id="admin-content">
+      <div class="local-banner" id="local-banner" hidden>
+        Pré-visualização local: pode experimentar a área, mas os dados desta sessão não serão guardados.
+      </div>
+
+      <section class="admin-intro" aria-labelledby="admin-title">
+        <div>
+          <p class="eyebrow">Lista principal</p>
+          <h1 id="admin-title">Convidados e convites</h1>
+          <p>Cadastre os destinatários, defina o tipo de convite e acompanhe a capacidade prevista.</p>
+        </div>
+        <div class="admin-actions">
+          <button class="button button-secondary" id="manage-origins" type="button">Gerir “Convidado de”</button>
+          <button class="button button-primary" id="new-invitation" type="button">Novo convite</button>
+        </div>
+      </section>
+
+      <section class="stats-grid" aria-label="Resumo dos convites">
+        <article>
+          <span>Convites</span>
+          <strong id="stat-invitations">0</strong>
+          <small>Total cadastrado</small>
+        </article>
+        <article>
+          <span>Pessoas previstas</span>
+          <strong id="stat-capacity">0</strong>
+          <small>Soma dos limites</small>
+        </article>
+        <article>
+          <span>Respostas</span>
+          <strong id="stat-responses">0</strong>
+          <small>Respostas recebidas</small>
+        </article>
+        <article>
+          <span>Confirmados</span>
+          <strong id="stat-confirmed">0</strong>
+          <small>Total de pessoas</small>
+        </article>
+      </section>
+
+      <section class="management-card" aria-labelledby="list-title">
+        <div class="management-heading">
+          <div>
+            <p class="eyebrow">Organização</p>
+            <h2 id="list-title">Lista de convites</h2>
+          </div>
+          <p id="result-count" aria-live="polite">0 resultados</p>
+        </div>
+
+        <div class="filters" aria-label="Filtros da lista">
+          <label class="search-field">
+            <span>Pesquisar</span>
+            <input id="search" type="search" placeholder="Nome, contacto, categoria ou origem" autocomplete="off" />
+          </label>
+          <label>
+            <span>Tipo</span>
+            <select id="filter-type">
+              <option value="">Todos</option>
+              <option value="individual">Individual</option>
+              <option value="family">Familiar</option>
+              <option value="collective">Coletivo</option>
+            </select>
+          </label>
+          <label>
+            <span>Estado</span>
+            <select id="filter-status">
+              <option value="">Todos</option>
+              <option value="sent">Enviado</option>
+              <option value="confirmed">Confirmado</option>
+              <option value="absent">Ausente</option>
+              <option value="inflation">Inflação</option>
+            </select>
+          </label>
+          <label>
+            <span>Categoria</span>
+            <select id="filter-category">
+              <option value="">Todas</option>
+            </select>
+          </label>
+          <label>
+            <span>Convidado de</span>
+            <select id="filter-guest-of">
+              <option value="">Todos</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="list-state" id="loading-state">A carregar os convites…</div>
+        <div class="list-state" id="empty-state" hidden>
+          <strong>Nenhum convite encontrado</strong>
+          <p>Cadastre o primeiro convidado ou altere os filtros da pesquisa.</p>
+        </div>
+
+        <div class="table-wrap" id="table-wrap" hidden>
+          <table>
+            <thead>
+              <tr>
+                <th>Destinatário</th>
+                <th>Convidado de</th>
+                <th>Categoria</th>
+                <th>Tipo</th>
+                <th>Limite</th>
+                <th>Respostas</th>
+                <th>Estado</th>
+                <th>PDF</th>
+                <th><span class="visually-hidden">Ações</span></th>
+              </tr>
+            </thead>
+            <tbody id="invitation-rows"></tbody>
+          </table>
+        </div>
+
+        <p class="page-status" id="page-status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="management-card message-management" aria-labelledby="messages-admin-title">
+        <div class="management-heading">
+          <div>
+            <p class="eyebrow">Moderação</p>
+            <h2 id="messages-admin-title">Mensagens dos convidados</h2>
+          </div>
+          <a class="button button-secondary" href="/admin/xai-xai/mensagens" target="_blank" rel="noopener">Abrir apresentação</a>
+        </div>
+
+        <div class="message-summary" aria-label="Resumo das mensagens">
+          <span><strong id="message-stat-pending">0</strong> pendentes</span>
+          <span><strong id="message-stat-approved">0</strong> aprovadas</span>
+          <span><strong id="message-stat-hidden">0</strong> ocultadas</span>
+        </div>
+
+        <div class="message-filters">
+          <label>
+            <span>Pesquisar mensagens</span>
+            <input id="message-search" type="search" placeholder="Nome, convite ou conteúdo" autocomplete="off" />
+          </label>
+          <label>
+            <span>Estado</span>
+            <select id="message-filter-status">
+              <option value="">Todas</option>
+              <option value="pending">Pendentes</option>
+              <option value="approved">Aprovadas</option>
+              <option value="hidden">Ocultadas</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="list-state" id="message-loading">A carregar as mensagens…</div>
+        <div class="list-state" id="message-empty" hidden>
+          <strong>Nenhuma mensagem encontrada</strong>
+          <p>As mensagens enviadas pelos convidados aparecerão aqui para revisão.</p>
+        </div>
+        <div class="admin-message-list" id="admin-message-list"></div>
+        <p class="page-status" id="message-admin-status" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <dialog id="invitation-dialog" aria-labelledby="dialog-title">
+      <form id="invitation-form">
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow" id="dialog-eyebrow">Novo registo</p>
+            <h2 id="dialog-title">Cadastrar convite</h2>
+          </div>
+          <button class="icon-button" id="close-dialog" type="button" aria-label="Fechar">×</button>
+        </div>
+
+        <input type="hidden" name="id" />
+
+        <label>
+          Nome que aparecerá no convite
+          <input name="recipientName" type="text" maxlength="120" placeholder="Ex.: Família Chongo" required />
+        </label>
+
+        <div class="form-grid">
+          <label>
+            Contacto / WhatsApp
+            <input name="contactPhone" type="tel" maxlength="30" placeholder="Ex.: 84 123 4567" required />
+          </label>
+          <label>
+            Categoria
+            <input name="category" type="text" list="category-suggestions" maxlength="60" placeholder="Ex.: Amigos" required />
+            <datalist id="category-suggestions"></datalist>
+          </label>
+        </div>
+
+        <div class="form-field">
+          <div class="form-field-heading">
+            <label for="guest-of-field">Convidado de</label>
+            <button class="text-button" id="manage-origins-from-form" type="button">Gerir opções</button>
+          </div>
+          <select id="guest-of-field" name="guestOf" required>
+            <option value="">Escolha uma opção</option>
+          </select>
+        </div>
+
+        <div class="form-grid">
+          <label>
+            Tipo de convite
+            <select name="invitationType" required>
+              <option value="individual">Individual</option>
+              <option value="family">Familiar</option>
+              <option value="collective">Coletivo</option>
+            </select>
+          </label>
+          <label>
+            Convite válido para
+            <span class="number-control">
+              <input name="guestLimit" type="number" min="1" max="200" value="1" required />
+              <small>pessoa(s)</small>
+            </span>
+          </label>
+        </div>
+
+        <label>
+          Observações internas
+          <textarea name="notes" rows="4" maxlength="500" placeholder="Opcional — estas observações não aparecem no convite."></textarea>
+        </label>
+
+        <div class="type-note" id="type-note" role="note"></div>
+        <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+
+        <div class="dialog-actions">
+          <button class="button button-secondary" id="cancel-dialog" type="button">Cancelar</button>
+          <button class="button button-primary" type="submit">Guardar convite</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="responses-dialog" aria-labelledby="responses-title">
+      <section class="responses-panel">
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">Pedidos por excesso</p>
+            <h2 id="responses-title">Rever inflação</h2>
+          </div>
+          <button class="icon-button" id="close-responses" type="button" aria-label="Fechar">×</button>
+        </div>
+        <p class="responses-intro" id="responses-intro"></p>
+        <div class="rejected-list" id="rejected-list"></div>
+        <p class="form-status" id="responses-status" role="status" aria-live="polite"></p>
+      </section>
+    </dialog>
+
+    <dialog id="origins-dialog" aria-labelledby="origins-title">
+      <section class="origins-panel">
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">Classificação interna</p>
+            <h2 id="origins-title">Opções de “Convidado de”</h2>
+          </div>
+          <button class="icon-button" id="close-origins" type="button" aria-label="Fechar">×</button>
+        </div>
+        <p class="responses-intro">Acrescente aqui Noivo, Noiva, pais, irmãos ou qualquer outra origem que venha a ser necessária.</p>
+        <form class="origin-form" id="origin-form">
+          <label for="origin-label">Nova opção</label>
+          <div>
+            <input id="origin-label" name="label" type="text" maxlength="80" placeholder="Ex.: Tios da noiva" required />
+            <button class="button button-primary" type="submit">Adicionar</button>
+          </div>
+        </form>
+        <div class="origin-list" id="origin-list"></div>
+        <p class="form-status" id="origin-status" role="status" aria-live="polite"></p>
+      </section>
+    </dialog>
+  </body>
+</html>

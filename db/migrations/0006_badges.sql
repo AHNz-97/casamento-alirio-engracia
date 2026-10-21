@@ -1,0 +1,3 @@
+CREATE TABLE IF NOT EXISTS badge_batches (request_id TEXT PRIMARY KEY, payload_hash TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS badges (sequence INTEGER PRIMARY KEY AUTOINCREMENT, id TEXT NOT NULL UNIQUE, name TEXT NOT NULL, role TEXT NOT NULL, request_id TEXT NOT NULL REFERENCES badge_batches(request_id), batch_position INTEGER NOT NULL, created_at TEXT NOT NULL, UNIQUE(request_id, batch_position));
+CREATE TABLE IF NOT EXISTS badge_pdf_runs (id TEXT PRIMARY KEY, model TEXT NOT NULL CHECK(model IN ('horizontal','vertical')), object_key TEXT NOT NULL, selection_json TEXT NOT NULL, fingerprint TEXT NOT NULL, badge_count INTEGER NOT NULL, created_at TEXT NOT NULL);
